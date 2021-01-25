@@ -6,7 +6,7 @@
 /*   By: aachbaro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 13:39:14 by aachbaro          #+#    #+#             */
-/*   Updated: 2021/01/22 15:16:59 by aachbaro         ###   ########.fr       */
+/*   Updated: 2021/01/25 14:44:31 by aachbaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,31 +23,52 @@ int	get_next_line(int fd, char **line)
 	char		*buf;
 	char		*str;
 	int			ret;
-	int			size;
 
 	ret = 1;
 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	str = malloc(sizeof(char));
-	if (!buf || !str)
-		return (NULL);
-	size = ft_strlen(tmp);
-	while(ft_strchr(buf, '\n') == NULL && ret)
+	str = malloc(sizeof(char) * 1);
+	str[0] = 0;
+	tmp = ft_strdup("");
+	while (ft_strchr(buf, '\n') == NULL && ret)
 	{
 		free(str);
 		ret = read(fd, buf, BUFFER_SIZE);
-		buf[BUFFER_SIZE + 1] = 0;
-		str = malloc(sizeof(char) * (size + ft_strlen(buf);
+		buf[BUFFER_SIZE] = 0;
+		if (ft_strchr(tmp, '\n') != NULL)
+		{
+			str = ft_substr(tmp, 0, ft_strchr(tmp, '\n') - tmp);
+			tmp = ft_substr(tmp, ft_strchr(tmp, '\n') - tmp, ft_strlen(tmp));
+		}
+		else if (ft_strchr(buf, '\n') != NULL)
+		{
+			str = ft_strjoin(tmp, ft_substr(buf, 0, ft_strchr(buf, '\n') - buf));
+			tmp = ft_substr(buf, ft_strchr(buf, 'n') - buf, ft_strlen(buf));
+		}
+		else
+		{
+			str = ft_strjoin(tmp, buf);
+			tmp = ft_strdup(str);
+		}
+
 	}
-	return (0);
+	*line = ft_substr(str, 0, ft_strlen(str));
+	return (ret);
 }
 
 int	main(void)
 {
 	int		fd;
-	char	*line;
+	char	**line;
+	int		i;
 
+	i = 0;
 	fd = open("text", O_RDONLY);
-	get_next_line(fd, &line);
-	printf("\n %s", line);
+	line = malloc(sizeof(char *) * 10);
+	while (i < 4)
+	{
+		printf("%d - ",get_next_line(fd, &line[i]));
+		printf("%s\n", line[i]);
+		i++;
+	}
 	return (0);
 }

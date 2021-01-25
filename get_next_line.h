@@ -6,7 +6,7 @@
 /*   By: aachbaro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 13:39:42 by aachbaro          #+#    #+#             */
-/*   Updated: 2021/01/22 14:54:17 by aachbaro         ###   ########.fr       */
+/*   Updated: 2021/01/25 13:00:15 by aachbaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# define BUFFER_SIZE 4096
 
-int		ft_strlen(char *str);
+int		ft_strlen(const char *str);
 char	*ft_strchr(const char *s, int c);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strdup(const char *s);
 
 #endif
