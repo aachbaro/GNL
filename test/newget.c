@@ -6,7 +6,7 @@
 /*   By: aachbaro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 13:39:14 by aachbaro          #+#    #+#             */
-/*   Updated: 2021/01/26 15:08:53 by aachbaro         ###   ########.fr       */
+/*   Updated: 2021/01/26 15:13:27 by aachbaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,22 @@
 #include <fcntl.h>
 #include <string.h>
 #include <stdio.h>
+
+int	line_loop(char **buf, char **str, char **tmp, int fd)
+{
+	int		ret;
+
+	ret = 1;
+	while(!ft_strchr(*buf, '\n') && !ft_strchr(*tmp, '\n') && ret)
+	{
+		free(*str);
+		ret = read(fd, *buf, BUFFER_SIZE);
+		buf[BUFFER_SIZE] = 0;
+		*str = ft_strjoin(*tmp, *buf);
+		*tmp = ft_strdup(*str);
+	}
+	return (0);
+}
 
 int	get_next_line(int fd, char **line)
 {
@@ -27,14 +43,7 @@ int	get_next_line(int fd, char **line)
 	str = malloc(sizeof(char) * 1);
 	if (!tmp)
 		tmp = ft_strdup("");
-	while (!ft_strchr(buf, '\n') && !ft_strchr(tmp, '\n') && read(fd, buf, BUFFER_SIZE))
-	{
-		free(str);
-		buf[BUFFER_SIZE] = 0;
-		str = ft_strjoin(tmp, buf);
-		free(tmp);
-		tmp = ft_strdup(str);
-	}
+	line_loop(&buf, &str, &tmp, fd);
 	if (ft_strchr(tmp, '\n') != NULL)
 	{
 		str = ft_substr(tmp, 0, ft_strchr(tmp, '\n') - tmp);
