@@ -6,7 +6,7 @@
 /*   By: aachbaro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 13:39:14 by aachbaro          #+#    #+#             */
-/*   Updated: 2021/01/29 10:59:16 by aachbaro         ###   ########.fr       */
+/*   Updated: 2021/01/29 12:03:16 by aachbaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	get_next_line(int fd, char **line)
 {
 	static char *tmp;
 	char		buf[BUFFER_SIZE + 1];
-	char		*str;
 	int			ret;
 	int			i;
 
@@ -30,13 +29,13 @@ int	get_next_line(int fd, char **line)
 	i = 0;
 	while (i < BUFFER_SIZE + 1)
 		buf[i++] = 0;
-	str = NULL;
+	*line = NULL;
 	ret = 1;
 	if (!tmp)
 		tmp = ft_strdup("");
 	while (!ft_strchr(buf, '\n') && !ft_strchr(tmp, '\n') && ret)
 	{
-		free(str);
+		free(*line);
 		ret = read(fd, buf, BUFFER_SIZE);
 		if (ret == -1)
 		{
@@ -44,50 +43,46 @@ int	get_next_line(int fd, char **line)
 			return (-1);
 		}
 		buf[ret] = 0;
-		if (!(str = ft_strjoin(tmp, buf)))
+		if (!(*line = ft_strjoin(tmp, buf)))
 		{
 			free(tmp);
 			return (-1);
 		}
-		if (!(tmp = ft_strdup(str)))
-		{
-			free(str);
+		if (!(tmp = ft_strdup(*line)))
 			return (-1);
-		}
 	}
-	if (ft_strchr(tmp, '\n') != NULL && str)
+	if (ft_strchr(tmp, '\n') != NULL && *line)
 	{
-		free(str);
-		if (!(str = ft_substr(tmp, 0, ft_strchr(tmp, '\n') - tmp)))
+		if (*line != NULL)
+			free(*line);
+		printf("\nOK\n");
+		if (!(*line = ft_substr(tmp, 0, ft_strchr(tmp, '\n') - tmp)))
 		{
 			free(tmp);
 			return (-1);
 		}
+		printf("\nOK\n");
 		if (!(tmp = ft_substr(tmp, ft_strchr(tmp, '\n') - tmp + 1, ft_strlen(tmp))))
-		{
-			free(str);
 			return (-1);
-		}
 	}
 	else if (ft_strchr(buf, '\n') != NULL)
 	{
-		free(str);
-		if (!(str = ft_strjoin(tmp, ft_substr(buf, 0, ft_strchr(buf, '\n') - buf))))
+		printf("\nOK\n");
+		free(*line);
+		if (!(*line = ft_strjoin(tmp, ft_substr(buf, 0, ft_strchr(buf, '\n') - buf))))
 		{
 			free(tmp);
 			return (-1);
 		}
 //		free(tmp);
 		if (!(tmp = ft_substr(buf, ft_strchr(buf, '\n') - buf + 1, ft_strlen(buf))))
-		{
-			free(str);
 			return (-1);
-		}
 	}
 	else
+	{
 		free(tmp);
-	*line = str;
-	if (ret == 0 && *str == 0)
+	}
+	if (ret == 0 && **line == 0)
 		return (0);
 	return (1);
 }
@@ -139,7 +134,3 @@ int	main(int ac, char **av)
 	system("leaks a.out | grep leaked\n");
 	return 0;
 }
-
-
-
-
