@@ -6,7 +6,7 @@
 /*   By: aachbaro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 13:42:19 by aachbaro          #+#    #+#             */
-/*   Updated: 2021/01/28 15:21:25 by aachbaro         ###   ########.fr       */
+/*   Updated: 2021/02/03 14:41:20 by aachbaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int		ft_strlen(const char *str)
 	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 		i++;
 	return (i);
 }
@@ -57,24 +57,6 @@ char	*ft_strdup(const char *s)
 	return (cpy);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	unsigned int	i;
-	unsigned int	j;
-	char			*str;
-
-	i = start;
-	j = 0;
-	if (start >= (unsigned int)ft_strlen(s))
-		return (ft_strdup(""));
-	if (!(str = malloc(sizeof(char) * (len + 1))))
-		return (NULL);
-	while (j < len && s[i])
-		str[j++] = s[i++];
-	str[j] = 0;
-	return (str);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
@@ -98,4 +80,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		str[j++] = s2[i++];
 	str[j] = 0;
 	return (str);
+}
+
+int		del_str(char **str, int ret)
+{
+	free(*str);
+	return (ret);
 }
