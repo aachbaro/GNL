@@ -6,7 +6,7 @@
 /*   By: aachbaro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 13:39:14 by aachbaro          #+#    #+#             */
-/*   Updated: 2021/02/02 15:46:00 by aachbaro         ###   ########.fr       */
+/*   Updated: 2021/02/03 11:59:40 by aachbaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,33 @@
 #include <fcntl.h>
 #include <string.h>
 #include <stdio.h>
+
+char	*loop_buf(int fd, int *ret, char *tmp)
+{
+	char	*str;
+	char	buf[BUFFER_SIZE + 1];
+
+	while (!ft_strchr(tmp, '\n') && *ret)
+	{
+		*ret = read(fd, buf, BUFFER_SIZE);
+		buf[*ret] = 0;
+		str = malloc(sizeof(char *) ft_strlen(tmp));
+		i = 0;
+		j = 0;
+		while (tmp[i])
+			str[j++] = tmp[i++];
+		str[j] = 0;
+		free(tmp);
+		ft_strjoin(str, buf);
+		i = 0;
+		j = 0;
+		while (str[i])
+			tmp[j++] = str[i++];
+		tmp[j] = 0;
+		free(str);
+	}
+	return (tmp);
+}	
 
 char	*get_line(char *tmp)
 {
@@ -40,15 +67,28 @@ char	*get_line(char *tmp)
 
 char	*get_tmp(char *tmp)
 {
-	if (ft_strchr(tmp, '\n'))
+	int		i;
+	int		j;
+	char	*str;
+
+	i = 0;
+	while (tmp[i] && tmp[i] != '\n')
+		i++;
+	if (tmp[i] == 0)
 	{
-		tmp = ft_strchr(tmp, '\n') + 1;
-		if (!tmp)
-			return (NULL);
+		free(tmp);
+		return (ft_strdup(""));
 	}
-	else
-		tmp = ft_strdup("");
-	return (tmp);
+	str = malloc(sizeof(char) * (ft_strlen(tmp) - i - 1));
+	if (!str)
+		return (NULL);
+	j = 0;
+	i++;
+	while (tmp[i])
+		str[j++] = tmp[i++];
+	free(tmp);
+	str[j] = 0;
+	return (str);
 }
 
 int		get_next_line(int fd, char **line)
