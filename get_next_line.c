@@ -6,7 +6,7 @@
 /*   By: aachbaro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 13:39:14 by aachbaro          #+#    #+#             */
-/*   Updated: 2021/02/03 15:53:26 by aachbaro         ###   ########.fr       */
+/*   Updated: 2021/02/04 15:59:00 by aachbaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ char	*loop_buf(int fd, int *ret, char *tmp)
 	if (!str)
 		return (NULL);
 	free(tmp);
+	tmp = NULL;
 	tmp = ft_strjoin(str, buf);
 	if (!str)
 		return (NULL);
 	free(str);
+	str = NULL;
 	return (tmp);
 }
 
@@ -92,7 +94,7 @@ int		get_next_line(int fd, char **line)
 	static char *tmp;
 	int			ret;
 
-	if (!line || BUFFER_SIZE <= 0 || fd < 0)
+	if (!line || BUFFER_SIZE <= 0 || fd <= 0)
 		return (-1);
 	if (!tmp)
 		tmp = ft_strdup("");
@@ -114,28 +116,28 @@ int		get_next_line(int fd, char **line)
 	return (1);
 }
 /*
-**int		main(int ac, char **av)
-**{
-**	char	*line;
-**	int		fd;
-**	int		ret;
-**	int		countline;
-**
-**	countline = 1;
-**	if (ac == 1)
-**		fd = 0;
-**	if (ac >= 2)
-**		fd = open(av[1], O_RDONLY);
-**	while ((ret = get_next_line(fd, &line)) == 1)
-**	{
-**		printf("line %d = %s - [%d]\n", countline, line, ret);
-**		free(line);
-**		countline++;
-**	}
-**	printf("line %d = %s - [%d]\n", countline, line, ret);
-**	free(line);
-**	printf("\nTest de LEAKS\n");
-**	system("leaks a.out | grep leaked\n");
-**	return (0);
-**}
+int		main(int ac, char **av)
+{
+	char	*line;
+	int		fd;
+	int		ret;
+	int		countline;
+
+	countline = 1;
+	if (ac == 1)
+		fd = 0;
+	if (ac >= 2)
+		fd = open(av[1], O_RDONLY);
+	while ((ret = get_next_line(fd, &line)) == 1)
+	{
+		printf("line %d = %s - [%d]\n", countline, line, ret);
+		free(line);
+		countline++;
+	}
+	printf("line %d = %s - [%d]\n", countline, line, ret);
+	free(line);
+	printf("\nTest de LEAKS\n");
+	system("leaks a.out | grep leaked\n");
+	return (0);
+}
 */
